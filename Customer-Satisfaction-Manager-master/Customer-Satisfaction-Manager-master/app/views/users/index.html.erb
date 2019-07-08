@@ -1,0 +1,74 @@
+<!-- page header -->
+<div class="page_header">
+  <h1><%= t('admin.users') %></h1>
+
+  <div class="add_element">
+    <button class="btn btn-link new-user-link" data-url="<%= new_user_path %>">
+      <i class="icon-plus icon-white"> </i> <%= t('admin.tabs.new_user') %>
+    </button>
+  </div>
+
+</div>
+<!--// page header -->
+
+<!-- page contents -->
+<div class="page_content" id="users-content">
+
+<div class="users_div">
+
+  <%= form_tag(users_name_filter_path, :method => "get", :remote => true) do %>
+      <div class="users_filter form-inline">
+        <h5 class="filter_element"><%= t('admin.filter_name') %></h5>
+        &nbsp;
+        <%= text_field_tag "users_filter_text", @last_filter_text %>
+        &nbsp;
+        <%= button_tag(t('buttons.filter'), :class => "btn") %>
+      </div>
+  <% end %>
+  <hr class="hr_filter">
+  <br>
+  <% @users.each do |user| %>
+      <div class="row_user_<%= user.id.to_s %>">
+
+        <div class="users-avatar">
+          <% @profile = Profile.find_by_user_id(user) %>
+          <%= render template: 'profiles/avatar', :locals => {:profile => @profile} %>
+        </div>
+
+        <div class="user-name">
+
+          <h4><a href="#show-user<%= user.id.to_s %>" class="show-user-link" data-url="<%= user_path user %>">
+            <%= user.full_name %>
+          </a></h4>
+
+          <h6 class="user-role">
+            <% if user.client? %>
+                <%= t('admin.client') %> <%= user.client.name %>
+            <% elsif user.mooveit? %>
+                <%= t('admin.mooveit_employee') %>
+            <% else %>
+                <%= t('admin.mooveit_admin') %>
+            <% end %>
+          </h6>
+
+          <% @comment = Comment.find_all_by_user_id(user.id).last %>
+          <% if !@comment.nil? %>
+              <% @feedback = Feedback.find @comment.feedback_id %>
+              <p class="user-comment">
+                <%= @comment.content.truncate 200 %>
+              </p>
+
+              <p class="user-comment-date">
+                <%= t('admin.comment_created') %><%= @comment.created_at.strftime("%A %d %B %Y") %><%= t('admin.comment_created_on') %><%= @feedback.subject %>
+              </p>
+          <% end %>
+
+        </div>
+
+      </div>
+      <hr>
+  <% end %>
+</div>
+
+</div>
+<!--// page contents -->

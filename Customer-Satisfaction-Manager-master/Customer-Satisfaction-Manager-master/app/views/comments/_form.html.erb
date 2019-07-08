@@ -1,0 +1,25 @@
+<%= form_for(@comment, :remote => true) do |f| %>
+    <% if @comment.errors.any? %>
+        <div class="alert alert-error">
+          <% if @comment.errors.count > 1 %>
+              <h4><%= t('activerecord.errors.template.header.other', :model=> t('Comments.Comment'), :count=> @comment.errors.count) %></h4>
+          <% else %>
+              <h4><%= t('activerecord.errors.template.header.one',:model=>t('Comments.Comment')) %></h4>
+          <% end %>
+          <ul>
+            <% @comment.errors.full_messages.each do |msg| %>
+                <li><strong><%= msg %></strong></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <%= f.text_area :content, :rows => 3, :class => "new_comment_text" %>
+
+    <input id="comment_feedback_id" name="comment[feedback_id]" type="hidden" value="<%= @feedback.id %>"/>
+    <input id="comment_user_id" name="comment[user_id]" type="hidden" value="<%= current_user.id %>"/>
+    <div class="actions">
+      <%= f.submit t('buttons.comment'), :class => "btn" %>
+      <a href="#feedbacks" class="btn btn-link feedbacks-link" type="button" data-url="<%= project_feedbacks_path(@feedback.project) %>"><%= t('buttons.back') %></a>
+    </div>
+<% end %>
