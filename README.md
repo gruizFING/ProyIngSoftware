@@ -1,5 +1,4 @@
 # ProyIngSoftware
 Proyecto de Ingeniería de Software
 
-Web app "Customer Satisfaction Manager"
-Respaldo de master branch
+RoR Web app "Customer Satisfaction Manager" master branch
